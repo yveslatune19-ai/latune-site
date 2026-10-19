@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Merci — La Tune Company</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+/* Page affichée après l'envoi du formulaire quand JavaScript est désactivé */
+:root {
+  --bg: #FFFFFF; --fg: #111111; --muted: #4A4845; --accent: #FF6B1A; --on-fg: #FFFFFF;
+  --font-display: "Archivo Black", "Arial Black", Impact, sans-serif;
+  --font-body: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111111; --fg: #FFFFFF; --muted: #BDBAB5; --on-fg: #111111; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.6;
+  display: flex; align-items: center; justify-content: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 48px;
+}
+main { max-width: 34rem; display: grid; gap: 20px; }
+h1 { margin: 0; font-family: var(--font-display); font-size: clamp(2.2rem, 7vw, 3.4rem); line-height: 1; letter-spacing: -0.03em; }
+h1 span { color: var(--accent); }
+p { margin: 0; font-size: 1.1rem; color: var(--muted); }
+a.btn {
+  justify-self: start; display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px;
+  border-radius: 999px; background: var(--fg); color: var(--on-fg); font-weight: 700; text-decoration: none;
+}
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Merci, votre message est bien envoyé<span>.</span></h1>
+  <p>Nous vous répondons sous 48 heures. Pour une question urgente, écrivez-nous sur WhatsApp au +225 07 05 35 49 14.</p>
+  <a class="btn" href="/">Retour au site</a>
+</main>
+</body>
+</html>

@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Tune Company — Création de sites web pour entreprises</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<meta name="theme-color" content="#111111">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="La Tune Company">
+<meta property="og:title" content="La Tune Company — Création de sites web pour entreprises">
+<meta property="og:description" content="Des sites modernes, rapides et faciles à lire sur téléphone, pour que vos clients vous trouvent et vous contactent. Abidjan, Canada et à distance.">
+<meta property="og:image" content="/images/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="La Tune Company crée des sites web modernes, rapides et adaptés au téléphone pour les entreprises.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap">
+<style>
+/* Mise en page : une seule page qui défile, chaque section est un bloc indépendant (futures pages). */
+:root {
+  --bg: #FFFFFF;
+  --surface: #F3F2F0;
+  --fg: #111111;
+  --muted: #4A4845;
+  --line: #E2E0DC;
+  --accent: #FF6B1A;      /* le point orange du logo */
+  --on-accent: #111111;
+  --on-fg: #FFFFFF;
+  --error: #B42318;
+  --footer-bg: #111111;
+  --footer-fg: #FFFFFF;
+  --footer-muted: #B5B2AD;
+  --footer-line: #2E2C2A;
+  --font-display: "Archivo Black", "Arial Black", Impact, sans-serif;
+  --font-body: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --maxw: 1200px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111111; --surface: #1C1B1A; --fg: #FFFFFF; --muted: #BDBAB5; --line: #2E2C2A;
+    --on-fg: #111111; --error: #FF8A7A; --footer-bg: #000000; --footer-line: #262422; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111111; --surface: #1C1B1A; --fg: #FFFFFF; --muted: #BDBAB5; --line: #2E2C2A;
+  --on-fg: #111111; --error: #FF8A7A; --footer-bg: #000000; --footer-line: #262422; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* Quand on clique un lien du menu, la section ne passe pas sous l'en-tête collant */
+section[id] { scroll-margin-top: 96px; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg);
+}
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+/* Conteneur commun à toutes les sections */
+.wrap {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- Logo 3A ---------- */
+.logo { display: inline-flex; flex-direction: column; gap: 5px; text-decoration: none; color: var(--fg); }
+.logo-top { display: flex; align-items: flex-end; gap: 4px; }
+.logo-word { font-family: var(--font-display); font-size: 1.9rem; line-height: 0.8; letter-spacing: -0.03em; }
+.logo-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.logo-bottom { display: flex; align-items: center; gap: 6px; }
+.logo-rule { flex-grow: 1; height: 2px; background: var(--fg); }
+.logo-sub { font-weight: 700; font-size: 0.5rem; letter-spacing: 0.6em; margin-right: -0.6em; }
+
+/* ---------- En-tête ---------- */
+.site-header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding-block: 18px;
+}
+.nav { display: flex; align-items: center; gap: 28px; }
+.nav a { text-decoration: none; font-weight: 500; font-size: 1rem; }
+.nav a:not(.btn):hover { color: var(--muted); }
+.menu-toggle {
+  display: none;
+  align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 16px;
+  border: 2px solid var(--fg); border-radius: 999px;
+  background: transparent; color: var(--fg);
+  font: 700 0.95rem var(--font-body); cursor: pointer;
+}
+
+/* ---------- Boutons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 0 24px; border-radius: 999px;
+  font-weight: 700; font-size: 1rem; text-decoration: none;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-dark { background: var(--fg); color: var(--on-fg); }
+.btn-accent { background: var(--accent); color: var(--on-accent); }
+.btn-outline { border: 2px solid var(--fg); color: var(--fg); }
+
+/* ---------- Accueil ---------- */
+.hero { padding-block: clamp(56px, 10vw, 112px) clamp(48px, 8vw, 96px); }
+.hero-inner { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 56px; align-items: center; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+}
+.eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+.hero h1 {
+  margin: 20px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6.2vw, 4.6rem);
+  line-height: 0.98; letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.hero h1 .dot { color: var(--accent); }
+.hero-lead { margin: 24px 0 0; max-width: 34rem; font-size: 1.2rem; color: var(--muted); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+
+/* Aperçu de site dans une fenêtre de navigateur */
+.preview {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.preview-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.preview-bar span { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.preview-url {
+  margin-left: 8px; flex-grow: 1; min-width: 0;
+  padding: 4px 12px; border-radius: 999px; background: var(--bg);
+  font-size: 0.8rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.preview-body { padding: 24px; display: grid; gap: 14px; }
+.ph { border-radius: 8px; background: var(--line); }
+.ph-title { height: 26px; width: 80%; background: var(--fg); }
+.ph-line { height: 10px; }
+.ph-line.short { width: 60%; }
+.ph-btn { height: 30px; width: 120px; border-radius: 999px; background: var(--accent); margin-top: 6px; }
+.ph-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 8px; }
+.ph-card { aspect-ratio: 4 / 3; max-width: 100%; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); }
+
+.hero-points {
+  display: flex; flex-wrap: wrap; gap: 10px 28px;
+  margin: 48px 0 0; padding: 24px 0 0; list-style: none;
+  border-top: 1px solid var(--line);
+  font-weight: 500;
+}
+.hero-points li { display: flex; align-items: center; gap: 10px; }
+.hero-points svg { flex-shrink: 0; }
+
+/* ---------- Sections (bloc commun) ---------- */
+.section { padding-block: clamp(64px, 9vw, 112px); border-top: 1px solid var(--line); }
+.section-head { display: grid; gap: 16px; max-width: 46rem; }
+.section-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.6vw, 3.2rem);
+  line-height: 1; letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.section-head h2 .dot { color: var(--accent); }
+.section-head p { margin: 0; font-size: 1.1rem; color: var(--muted); max-width: 38rem; }
+
+/* ---------- Services ---------- */
+.services-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;
+  margin-top: 48px;
+}
+.service {
+  min-width: 0;
+  display: flex; flex-direction: column; gap: 14px;
+  padding: 28px;
+  background: var(--surface);
+  border-radius: 20px;
+}
+.service-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--fg); color: var(--bg);
+}
+.service h3 { margin: 6px 0 0; font-family: var(--font-display); font-size: 1.45rem; line-height: 1.1; letter-spacing: -0.01em; }
+.service p { margin: 0; color: var(--muted); }
+.service-for {
+  margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 0.92rem; color: var(--fg);
+}
+.service-for strong { font-weight: 700; }
+
+.included {
+  margin-top: 20px;
+  display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr); gap: 32px; align-items: start;
+  padding: 28px;
+  border: 2px solid var(--fg); border-radius: 20px;
+}
+.included h3 { margin: 0; font-family: var(--font-display); font-size: 1.3rem; line-height: 1.15; }
+.included ul {
+  margin: 0; padding: 0; list-style: none;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 28px;
+  font-weight: 500;
+}
+.included li { display: flex; gap: 10px; align-items: flex-start; }
+.included li::before {
+  content: ""; flex-shrink: 0; width: 9px; height: 9px; margin-top: 0.55em;
+  border-radius: 50%; background: var(--accent);
+}
+.services-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 40px; }
+.services-cta p { margin: 0; font-weight: 500; }
+
+/* ---------- Réalisations ---------- */
+.work-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;
+  margin-top: 48px;
+}
+.work { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.work-shot {
+  aspect-ratio: 4 / 3; max-width: 100%;
+  border-radius: 18px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+/* Projet réel : aperçu dessiné du site La Tune Company */
+.work-shot.real { background: var(--fg); padding: 18px 18px 0; }
+.mini-site { flex-grow: 1; background: var(--bg); border-radius: 10px 10px 0 0; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.mini-nav { display: flex; justify-content: space-between; align-items: center; }
+.mini-logo { font-family: var(--font-display); font-size: 0.8rem; line-height: 1; letter-spacing: -0.02em; }
+.mini-logo i { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); margin-left: 2px; }
+.mini-pill { width: 34px; height: 12px; border-radius: 999px; background: var(--fg); }
+.mini-h { font-family: var(--font-display); font-size: 1.05rem; line-height: 1; letter-spacing: -0.02em; margin-top: 8px; }
+.mini-h i { font-style: normal; color: var(--accent); }
+.mini-line { height: 6px; border-radius: 4px; background: var(--line); }
+.mini-line.short { width: 60%; }
+.mini-btn { width: 64px; height: 14px; border-radius: 999px; background: var(--accent); margin-top: 4px; }
+/* Carte d'appel : « Votre projet ici ? » (occupe deux colonnes) */
+.work-cta {
+  grid-column: span 2;
+  min-width: 0;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 18px;
+  padding: clamp(28px, 4vw, 48px);
+  border-radius: 18px;
+  background: var(--fg); color: var(--bg);
+}
+.work-cta .eyebrow { color: var(--bg); opacity: 0.75; }
+.work-cta h3 {
+  margin: 0; font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1; letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.work-cta h3 .dot { color: var(--accent); }
+.work-cta p { margin: 0; max-width: 32rem; font-size: 1.05rem; color: var(--bg); opacity: 0.8; }
+.work-cta .btn { margin-top: 6px; }
+.work-meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 4px 12px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line);
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em;
+}
+.work h3 { margin: 0; font-family: var(--font-display); font-size: 1.35rem; line-height: 1.1; }
+.work p { margin: 0; color: var(--muted); }
+
+/* ---------- À propos ---------- */
+.about-inner { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 56px; align-items: start; }
+.about-visual { display: flex; flex-direction: column; gap: 20px; }
+/* Emplacement de la future photo : en attendant, l'icône « LT. » du logo */
+.about-photo {
+  aspect-ratio: 1 / 1; max-width: 100%;
+  border-radius: 24px; background: var(--fg);
+  display: flex; align-items: center; justify-content: center;
+}
+.about-mono { display: flex; align-items: flex-end; gap: 0.12em; font-family: var(--font-display); font-size: clamp(5rem, 14vw, 9rem); line-height: 0.8; letter-spacing: -0.04em; color: var(--bg); }
+.about-mono i { width: 0.2em; height: 0.2em; border-radius: 50%; background: var(--accent); }
+.zones { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.zones li {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface);
+  font-weight: 700; font-size: 0.9rem;
+}
+.zones svg { flex-shrink: 0; }
+.about-text { min-width: 0; display: grid; gap: 18px; }
+.about-text h2 {
+  margin: 0; font-family: var(--font-display);
+  font-size: clamp(2rem, 4.6vw, 3.2rem); line-height: 1; letter-spacing: -0.025em; text-wrap: balance;
+}
+.about-text h2 .dot { color: var(--accent); }
+.about-text p { margin: 0; font-size: 1.08rem; color: var(--muted); max-width: 38rem; }
+.about-text p.lead { font-size: 1.25rem; color: var(--fg); font-weight: 500; }
+
+.values {
+  margin-top: 56px;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px;
+}
+.value { min-width: 0; display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 3px solid var(--fg); }
+.value h3 { margin: 0; font-family: var(--font-display); font-size: 1.2rem; line-height: 1.15; }
+.value p { margin: 0; color: var(--muted); }
+
+/* ---------- Contact ---------- */
+.contact-inner { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: start; }
+.contact-info { min-width: 0; display: grid; gap: 18px; }
+.contact-info h2 {
+  margin: 0; font-family: var(--font-display);
+  font-size: clamp(2rem, 4.6vw, 3.2rem); line-height: 1; letter-spacing: -0.025em; text-wrap: balance;
+}
+.contact-info h2 .dot { color: var(--accent); }
+.contact-info > p { margin: 0; font-size: 1.1rem; color: var(--muted); max-width: 32rem; }
+.coords { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.coords li { display: flex; align-items: center; gap: 14px; }
+.coord-icon {
+  flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface); border: 1px solid var(--line);
+}
+.coords small { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.coords span, .coords a { font-weight: 500; overflow-wrap: anywhere; }
+.coords a { text-decoration: none; }
+.coords a:hover { color: var(--accent); }
+
+.form {
+  min-width: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;
+  padding: clamp(22px, 3.5vw, 36px);
+  background: var(--surface); border-radius: 20px;
+}
+.field { min-width: 0; display: grid; gap: 6px; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-weight: 700; font-size: 0.95rem; }
+.field label .opt { font-weight: 400; color: var(--muted); }
+.field input, .field select, .field textarea {
+  width: 100%; min-height: 48px; padding: 12px 14px;
+  border: 1.5px solid var(--line); border-radius: 12px;
+  background: var(--bg); color: var(--fg);
+  font: 400 1rem var(--font-body);
+}
+.field textarea { min-height: 140px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--fg); box-shadow: 0 0 0 3px var(--accent); }
+.field [aria-invalid="true"] { border-color: var(--error); }
+/* Place réservée au message d'erreur : la mise en page ne bouge pas quand il apparaît ou disparaît */
+.error { min-height: 1.4em; line-height: 1.4; font-size: 0.88rem; font-weight: 500; color: var(--error); }
+.form-actions { grid-column: 1 / -1; display: grid; gap: 12px; justify-items: start; }
+.form-actions .btn { border: 0; cursor: pointer; font-family: var(--font-body); }
+.form-note { margin: 0; font-size: 0.88rem; color: var(--muted); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form { position: relative; }
+.form-fail { grid-column: 1 / -1; padding: 16px 20px; border-radius: 14px; border: 2px solid var(--error); background: var(--bg); }
+.form-fail p { margin: 0; color: var(--fg); }
+.form-success {
+  grid-column: 1 / -1;
+  display: grid; gap: 8px; padding: 20px;
+  border-radius: 14px; background: var(--bg); border: 2px solid var(--fg);
+}
+.form-success strong { font-family: var(--font-display); font-size: 1.2rem; }
+.form-success p { margin: 0; color: var(--muted); }
+
+/* ---------- Pied de page (toujours sur fond noir, avec le logo version noire) ---------- */
+.site-footer { background: var(--footer-bg); color: var(--footer-fg); padding-block: clamp(56px, 8vw, 88px) 28px; }
+.footer-top { display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(0, 1fr)); gap: 40px; }
+.site-footer .logo { color: var(--footer-fg); }
+.site-footer .logo-word { font-size: clamp(2.6rem, 6vw, 3.6rem); }
+.site-footer .logo-dot { width: 0.85rem; height: 0.85rem; }
+.site-footer .logo-rule { background: var(--footer-fg); height: 3px; }
+.site-footer .logo-sub { font-size: 0.8rem; }
+.footer-tagline { margin: 22px 0 0; max-width: 24rem; color: var(--footer-muted); }
+.footer-col { min-width: 0; display: grid; gap: 12px; align-content: start; }
+.footer-col h2 { margin: 0 0 4px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--footer-muted); }
+.footer-col a, .footer-col span { color: var(--footer-fg); text-decoration: none; font-weight: 500; overflow-wrap: anywhere; }
+.footer-col a:hover { color: var(--accent); }
+.footer-bottom {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px;
+  margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--footer-line);
+  font-size: 0.9rem; color: var(--footer-muted);
+}
+.footer-bottom a { color: var(--footer-fg); font-weight: 700; text-decoration: none; }
+.footer-bottom a:hover { color: var(--accent); }
+
+/* ---------- Téléphone ---------- */
+@media (max-width: 960px) {
+  .contact-inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .footer-top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer-brand { grid-column: 1 / -1; }
+  .about-inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .about-photo { max-width: 360px; }
+  .values { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; }
+  .services-grid { grid-template-columns: minmax(0, 1fr); }
+  .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .work-cta { grid-column: auto; }
+  .included { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+}
+@media (max-width: 560px) {
+  .work-grid { grid-template-columns: minmax(0, 1fr); }
+  .values { grid-template-columns: minmax(0, 1fr); }
+  .form { grid-template-columns: minmax(0, 1fr); }
+  .footer-top { grid-template-columns: minmax(0, 1fr); }
+  .included ul { grid-template-columns: minmax(0, 1fr); }
+  .service, .included { padding: 22px; }
+}
+@media (max-width: 860px) {
+  .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+}
+@media (max-width: 720px) {
+  .menu-toggle { display: inline-flex; }
+  .header-inner { flex-wrap: wrap; }
+  .nav {
+    display: none;
+    width: 100%;
+    flex-direction: column; align-items: stretch; gap: 4px;
+    padding-top: 12px;
+  }
+  .nav.open { display: flex; }
+  .nav a:not(.btn) { padding: 12px 4px; border-bottom: 1px solid var(--line); }
+  .nav .btn { margin-top: 12px; }
+  .hero-lead { font-size: 1.08rem; }
+  .hero-actions .btn { flex: 1 1 100%; }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="logo" href="#accueil" aria-label="La Tune Company, retour à l'accueil">
+      <span class="logo-top"><span class="logo-word">LA TUNE</span><span class="logo-dot"></span></span>
+      <span class="logo-bottom"><span class="logo-rule"></span><span class="logo-sub">COMPANY</span></span>
+    </a>
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    <nav class="nav" id="menu" aria-label="Menu principal">
+      <a href="#services">Services</a>
+      <a href="#realisations">Réalisations</a>
+      <a href="#a-propos">À propos</a>
+      <a class="btn btn-dark" href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="accueil">
+    <div class="wrap">
+      <div class="hero-inner">
+        <div>
+          <span class="eyebrow">Création de sites web pour entreprises</span>
+          <h1>Votre entreprise mérite un site qui travaille pour elle<span class="dot">.</span></h1>
+          <p class="hero-lead">La Tune Company conçoit des sites modernes, rapides et faciles à lire sur téléphone, pour que vos clients vous trouvent, vous comprennent et vous contactent.</p>
+          <div class="hero-actions">
+            <a class="btn btn-accent" href="#contact">Demander un devis</a>
+            <a class="btn btn-outline" href="#realisations">Voir les réalisations</a>
+          </div>
+        </div>
+        <div class="preview" aria-hidden="true">
+          <div class="preview-bar"><span></span><span></span><span></span><div class="preview-url">votre-entreprise.com</div></div>
+          <div class="preview-body">
+            <div class="ph ph-title"></div>
+            <div class="ph ph-line"></div>
+            <div class="ph ph-line short"></div>
+            <div class="ph-btn"></div>
+            <div class="ph-cards"><div class="ph-card"></div><div class="ph-card"></div><div class="ph-card"></div></div>
+          </div>
+        </div>
+      </div>
+      <ul class="hero-points">
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Pensé d'abord pour le téléphone</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Livré prêt à mettre en ligne</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Un interlocuteur unique du début à la fin</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="services" aria-labelledby="services-titre">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Services</span>
+        <h2 id="services-titre">Un site adapté à votre besoin<span class="dot">.</span></h2>
+        <p>Que vous partiez de zéro ou que votre site ait pris de l'âge, on construit ensemble le site qui présente le mieux votre activité.</p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 13h6"/><path d="M7 16h4"/></svg>
+          </div>
+          <h3>Site vitrine</h3>
+          <p>Un site de quelques pages pour présenter votre entreprise, vos services et vos coordonnées, et donner envie de vous contacter.</p>
+          <p class="service-for"><strong>Idéal pour :</strong> les entreprises qui n'ont pas encore de site.</p>
+        </article>
+
+        <article class="service">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+          </div>
+          <h3>Refonte de site</h3>
+          <p>Votre site existe mais paraît daté, lent ou difficile à lire sur téléphone ? On le modernise en gardant ce qui fonctionne.</p>
+          <p class="service-for"><strong>Idéal pour :</strong> les entreprises dont le site a plus de quelques années.</p>
+        </article>
+
+        <article class="service">
+          <div class="service-icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 16l4-5 3 3 5-7"/><path d="M15 7h3v3"/></svg>
+          </div>
+          <h3>Page de lancement</h3>
+          <p>Une seule page claire et percutante pour un nouveau produit, une offre spéciale ou un événement, avec un appel à l'action précis.</p>
+          <p class="service-for"><strong>Idéal pour :</strong> une campagne ou une ouverture à annoncer vite.</p>
+        </article>
+      </div>
+
+      <div class="included">
+        <h3>Inclus dans chaque site</h3>
+        <ul>
+          <li>Un affichage soigné sur téléphone, tablette et ordinateur</li>
+          <li>Un formulaire de contact pour recevoir vos demandes</li>
+          <li>Les bases du référencement pour être trouvé sur Google</li>
+          <li>L'aide à la mise en ligne de votre site</li>
+        </ul>
+      </div>
+
+      <div class="services-cta">
+        <a class="btn btn-dark" href="#contact">Parler de votre projet</a>
+        <p>Réponse sous 48 heures, devis gratuit.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="realisations" aria-labelledby="realisations-titre">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Réalisations</span>
+        <h2 id="realisations-titre">Des sites qui parlent pour vous<span class="dot">.</span></h2>
+        <p>Chaque projet commence par votre activité et vos clients. Voici ce que nous avons construit.</p>
+      </div>
+
+      <div class="work-grid">
+        <article class="work">
+          <div class="work-shot real" aria-hidden="true">
+            <div class="mini-site">
+              <div class="mini-nav"><span class="mini-logo">LA TUNE<i></i></span><span class="mini-pill"></span></div>
+              <div class="mini-h">Votre entreprise mérite un site<i>.</i></div>
+              <div class="mini-line"></div>
+              <div class="mini-line short"></div>
+              <div class="mini-btn"></div>
+            </div>
+          </div>
+          <div class="work-meta"><span class="tag">Identité visuelle</span><span class="tag">Site vitrine</span></div>
+          <h3>La Tune Company</h3>
+          <p>Notre propre identité : logo, couleurs, cartes de visite et le site que vous êtes en train de visiter.</p>
+        </article>
+
+        <article class="work-cta">
+          <span class="eyebrow">Prochain projet</span>
+          <h3>Votre projet ici&nbsp;<span class="dot">?</span> Parlons-en<span class="dot">.</span></h3>
+          <p>Racontez-nous votre activité et ce que vous attendez de votre site. Nous vous proposons une solution claire et un devis adapté.</p>
+          <a class="btn btn-accent" href="#contact">Démarrer mon projet</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="a-propos" aria-labelledby="a-propos-titre">
+    <div class="wrap">
+      <div class="about-inner">
+        <div class="about-visual">
+          <div class="about-photo" aria-hidden="true">
+            <span class="about-mono">LT<i></i></span>
+          </div>
+          <ul class="zones" aria-label="Où nous travaillons">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Abidjan</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Canada</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>À distance, partout</li>
+          </ul>
+        </div>
+
+        <div class="about-text">
+          <span class="eyebrow">À propos</span>
+          <h2 id="a-propos-titre">Une passion devenue entreprise<span class="dot">.</span></h2>
+          <p class="lead">La Tune Company est née de la passion de son fondateur, Yves, pour l'informatique, les nouvelles technologies et l'intelligence artificielle.</p>
+          <p>Tout a commencé par la création d'affiches et de flyers. En apprenant à capter l'attention avec une image et quelques mots, l'envie est venue d'aller plus loin : construire des sites web complets, utiles et agréables à parcourir.</p>
+          <p>Formé en autodidacte, projet après projet, Yves a fondé La Tune Company pour mettre ce savoir-faire au service des entreprises. Aujourd'hui, nous accompagnons celles qui veulent une présence en ligne claire, moderne et à leur image.</p>
+        </div>
+      </div>
+
+      <div class="values">
+        <div class="value">
+          <h3>L'œil du graphiste</h3>
+          <p>Nous avons commencé par le design d'affiches. Chaque site est pensé pour attirer le regard et se lire facilement.</p>
+        </div>
+        <div class="value">
+          <h3>Les outils d'aujourd'hui</h3>
+          <p>Nous utilisons des outils modernes, dont l'intelligence artificielle, pour avancer plus vite sans sacrifier la qualité.</p>
+        </div>
+        <div class="value">
+          <h3>Un seul interlocuteur</h3>
+          <p>Vous échangez directement avec la personne qui crée votre site. Pas d'intermédiaire, pas de message perdu.</p>
+        </div>
+        <div class="value">
+          <h3>Entre Abidjan et le Canada</h3>
+          <p>Nous travaillons avec des entreprises des deux côtés de l'Atlantique, et partout ailleurs à distance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact" aria-labelledby="contact-titre">
+    <div class="wrap">
+      <div class="contact-inner">
+        <div class="contact-info">
+          <span class="eyebrow">Contact</span>
+          <h2 id="contact-titre">Parlons de votre site<span class="dot">.</span></h2>
+          <p>Décrivez-nous votre projet en quelques lignes. Nous vous répondons sous 48 heures avec une proposition et un devis gratuit.</p>
+          <ul class="coords">
+            <li>
+              <span class="coord-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+              <div><small>E-mail</small><a href="mailto:latunecompany@gmail.com">latunecompany@gmail.com</a></div>
+            </li>
+            <li>
+              <span class="coord-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-13.3 7.9L3 21l1.1-4.6A9 9 0 1 1 21 12z"/></svg></span>
+              <div><small>Téléphone / WhatsApp</small><a href="tel:+2250705354914">+225 07 05 35 49 14</a></div>
+            </li>
+            <li>
+              <span class="coord-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg></span>
+              <div><small>Zone</small><span>Abidjan · Canada · À distance, partout</span></div>
+            </li>
+          </ul>
+        </div>
+
+        <form class="form" id="contact-form" name="contact" method="POST" action="/merci.html" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="contact">
+          <p class="hp" aria-hidden="true"><label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+          <div class="field">
+            <label for="f-nom">Nom</label>
+            <input id="f-nom" name="nom" type="text" autocomplete="name" required aria-describedby="e-nom">
+            <span class="error" id="e-nom"></span>
+          </div>
+          <div class="field">
+            <label for="f-entreprise">Entreprise <span class="opt">(facultatif)</span></label>
+            <input id="f-entreprise" name="entreprise" type="text" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="f-email">E-mail</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+            <span class="error" id="e-email"></span>
+          </div>
+          <div class="field">
+            <label for="f-tel">Téléphone / WhatsApp <span class="opt">(facultatif)</span></label>
+            <input id="f-tel" name="telephone" type="tel" autocomplete="tel">
+          </div>
+          <div class="field full">
+            <label for="f-type">Votre projet</label>
+            <select id="f-type" name="type">
+              <option>Site vitrine</option>
+              <option>Refonte de site</option>
+              <option>Page de lancement</option>
+              <option>Je ne sais pas encore</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="f-message">Message</label>
+            <textarea id="f-message" name="message" required aria-describedby="e-message" placeholder="Votre activité, ce que vous attendez du site, vos délais…"></textarea>
+            <span class="error" id="e-message"></span>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-accent" type="submit">Envoyer ma demande</button>
+          </div>
+          <div class="form-success" id="form-success" role="status" tabindex="-1" hidden>
+            <strong>Merci, votre message est bien envoyé.</strong>
+            <p>Nous vous répondons sous 48 heures. Pour une question urgente, écrivez-nous sur WhatsApp au +225 07 05 35 49 14.</p>
+          </div>
+          <div class="form-fail" id="form-fail" role="alert" hidden>
+            <p>Le message n'a pas pu partir, sans doute à cause de la connexion. Réessayez dans un instant, ou écrivez-nous directement à latunecompany@gmail.com.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="logo" href="#accueil" aria-label="La Tune Company, retour à l'accueil">
+          <span class="logo-top"><span class="logo-word">LA TUNE</span><span class="logo-dot"></span></span>
+          <span class="logo-bottom"><span class="logo-rule"></span><span class="logo-sub">COMPANY</span></span>
+        </a>
+        <p class="footer-tagline">Création de sites web pour les entreprises, à Abidjan, au Canada et à distance partout.</p>
+      </div>
+      <nav class="footer-col" aria-label="Plan du site">
+        <h2>Le site</h2>
+        <a href="#services">Services</a>
+        <a href="#realisations">Réalisations</a>
+        <a href="#a-propos">À propos</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="footer-col">
+        <h2>Nous joindre</h2>
+        <a href="mailto:latunecompany@gmail.com">latunecompany@gmail.com</a>
+        <a href="tel:+2250705354914">+225 07 05 35 49 14</a>
+        <a href="#contact">Demander un devis</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="annee">2026</span> La Tune Company. Tous droits réservés.</span>
+      <a href="#accueil">Retour en haut ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var btn = document.getElementById('menu-toggle');
+  var nav = document.getElementById('menu');
+  if (!btn || !nav) return;
+  btn.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.textContent = open ? 'Fermer' : 'Menu';
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.closest('a') && nav.classList.contains('open')) {
+      nav.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.textContent = 'Menu';
+    }
+  });
+})();
+
+// Formulaire de contact : vérifie les champs obligatoires avant l'envoi
+(function () {
+  var form = document.getElementById('contact-form');
+  var success = document.getElementById('form-success');
+  if (!form) return;
+
+  var rules = [
+    { id: 'f-nom', err: 'e-nom', test: function (v) { return v.trim().length > 1; }, msg: 'Indiquez votre nom.' },
+    { id: 'f-email', err: 'e-email', test: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }, msg: 'E-mail invalide, ex. : nom@site.com' },
+    { id: 'f-message', err: 'e-message', test: function (v) { return v.trim().length >= 10; }, msg: 'Décrivez votre projet (10 caractères min.)' }
+  ];
+
+  function check(rule) {
+    var input = document.getElementById(rule.id);
+    var ok = rule.test(input.value);
+    input.setAttribute('aria-invalid', ok ? 'false' : 'true');
+    document.getElementById(rule.err).textContent = ok ? '' : rule.msg;
+    return ok;
+  }
+
+  rules.forEach(function (rule) {
+    document.getElementById(rule.id).addEventListener('blur', function () {
+      if (this.value) check(rule);
+    });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var firstBad = null;
+    rules.forEach(function (rule) {
+      if (!check(rule) && !firstBad) firstBad = document.getElementById(rule.id);
+    });
+    if (firstBad) { firstBad.focus(); success.hidden = true; return; }
+
+    // Envoi du message à Netlify sans recharger la page
+    var fail = document.getElementById('form-fail');
+    var button = form.querySelector('button[type="submit"]');
+    fail.hidden = true;
+    button.disabled = true;
+    button.textContent = 'Envoi en cours…';
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      form.querySelectorAll('.field').forEach(function (f) { f.hidden = true; });
+      button.hidden = true;
+      success.hidden = false;
+      success.focus();
+    }).catch(function () {
+      fail.hidden = false;
+      button.disabled = false;
+      button.textContent = 'Envoyer ma demande';
+    });
+  });
+})();
+// Pied de page : l'année se met à jour toute seule
+(function () {
+  var el = document.getElementById('annee');
+  if (el) el.textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
