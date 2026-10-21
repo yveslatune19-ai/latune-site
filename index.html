@@ -205,16 +205,27 @@ a { color: inherit; }
   padding: 28px;
   background: var(--surface);
   border-radius: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .service-icon {
   width: 52px; height: 52px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
   background: var(--fg); color: var(--bg);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+/* Survol uniquement avec une souris : rien ne bouge sur téléphone */
+@media (hover: hover) {
+  .service:hover .service-icon { background: var(--accent); color: var(--on-accent); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .service:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08); }
 }
 .service h3 { margin: 6px 0 0; font-family: var(--font-display); font-size: 1.45rem; line-height: 1.1; letter-spacing: -0.01em; }
 .service p { margin: 0; color: var(--muted); }
 .service-for {
-  margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line);
+  margin-top: auto; align-self: flex-start;
+  padding: 8px 14px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--bg);
   font-size: 0.92rem; color: var(--fg);
 }
 .service-for strong { font-weight: 700; }
@@ -233,11 +244,20 @@ a { color: inherit; }
 }
 .included li { display: flex; gap: 10px; align-items: flex-start; }
 .included li::before {
-  content: ""; flex-shrink: 0; width: 9px; height: 9px; margin-top: 0.55em;
-  border-radius: 50%; background: var(--accent);
+  content: ""; flex-shrink: 0; width: 20px; height: 20px; margin-top: 0.2em;
+  border-radius: 50%;
+  background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 13px no-repeat;
 }
-.services-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 40px; }
-.services-cta p { margin: 0; font-weight: 500; }
+/* Bandeau foncé dans les deux thèmes : on reprend les couleurs du pied de page */
+.services-cta {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px;
+  margin-top: 40px; padding: 28px 32px; border-radius: 20px;
+  background: var(--footer-bg); color: var(--footer-fg);
+  border: 1px solid var(--footer-line);
+}
+.services-cta p { margin: 0; font-weight: 500; font-size: 1.1rem; }
+/* Contour blanc : un contour orange se confondrait avec le bouton orange */
+.services-cta .btn:focus-visible { outline-color: var(--footer-fg); }
 
 /* ---------- Réalisations ---------- */
 .work-grid {
@@ -423,7 +443,8 @@ a { color: inherit; }
   .form { grid-template-columns: minmax(0, 1fr); }
   .footer-top { grid-template-columns: minmax(0, 1fr); }
   .included ul { grid-template-columns: minmax(0, 1fr); }
-  .service, .included { padding: 22px; }
+  .service, .included, .services-cta { padding: 22px; }
+  .services-cta .btn { flex: 1 1 100%; }
 }
 @media (max-width: 860px) {
   .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
@@ -542,8 +563,8 @@ a { color: inherit; }
       </div>
 
       <div class="services-cta">
-        <a class="btn btn-dark" href="#contact">Parler de votre projet</a>
         <p>Réponse sous 48 heures, devis gratuit.</p>
+        <a class="btn btn-accent" href="#contact">Parler de votre projet</a>
       </div>
     </div>
   </section>
