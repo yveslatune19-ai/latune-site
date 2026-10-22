@@ -3,6 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+/* Écran d'intro : couleurs posées tout en haut, pour que le noir s'affiche dès la première image,
+   avant même le chargement des polices. Elles restent noires/blanches dans les deux thèmes. */
+:root { --intro-bg: #111111; --intro-fg: #FFFFFF; }
+html.intro { background: var(--intro-bg); }
+</style>
+<script>
+// Écran d'intro : on décide tout de suite s'il faut le montrer.
+// Une fois par session, seulement si JavaScript marche
+// et si l'appareil ne demande pas de réduire les animations.
+// Pour la revoir pendant les tests : ajouter ?intro à l'adresse (ex. /?intro).
+(function () {
+  try {
+    if (/[?&]intro\b/.test(location.search)) sessionStorage.removeItem('intro-vue');
+    if (sessionStorage.getItem('intro-vue') || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    sessionStorage.setItem('intro-vue', '1');
+    document.documentElement.classList.add('intro');
+  } catch (e) {}
+})();
+</script>
 <title>La Tune Company — Création de sites web pour entreprises</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png">
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
@@ -94,6 +114,42 @@ a { color: inherit; }
 .logo-bottom { display: flex; align-items: center; gap: 6px; }
 .logo-rule { flex-grow: 1; height: 2px; background: var(--fg); }
 .logo-sub { font-weight: 700; font-size: 0.5rem; letter-spacing: 0.6em; margin-right: -0.6em; }
+
+/* ---------- Écran d'intro (première visite de la session) ----------
+   Caché par défaut : il n'apparaît que si le petit script du <head> ajoute la classe « intro ».
+   Les animations attendent « intro-go » (police du logo prête, 0,3 s maximum). */
+.intro-screen { display: none; }
+html.intro { --intro-etat: paused; overflow: hidden; scrollbar-gutter: stable; }
+html.intro-go { --intro-etat: running; }
+html.intro .intro-screen {
+  display: flex; align-items: center; justify-content: center;
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--intro-bg); color: var(--intro-fg);
+  animation: intro-rideau 0.4s cubic-bezier(0.7, 0, 0.2, 1) 1.25s both var(--intro-etat);
+}
+/* Clic ou touche : le rideau se lève tout de suite */
+html.intro-passe .intro-screen { animation: intro-rideau-vite 0.3s cubic-bezier(0.7, 0, 0.2, 1) both; }
+.intro-logo { color: inherit; font-size: clamp(3rem, 14vw, 5.5rem); gap: 0.13em; }
+.intro-logo .logo-top { gap: 0.1em; }
+.intro-logo .logo-word { font-size: 1em; }
+.intro-logo .logo-dot { width: 0.26em; height: 0.26em; }
+.intro-logo .logo-bottom { gap: 0.16em; }
+.intro-logo .logo-rule { height: 0.05em; background: currentColor; transform-origin: left; }
+.intro-logo .logo-sub { font-size: 0.26em; }
+html.intro .intro-logo .logo-word { animation: intro-monte 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both var(--intro-etat); }
+html.intro .intro-logo .logo-dot { animation: intro-point 0.3s ease-out 0.45s both var(--intro-etat); }
+html.intro .intro-logo .logo-rule { animation: intro-trait 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.75s both var(--intro-etat); }
+html.intro .intro-logo .logo-sub { animation: intro-glisse 0.25s ease-out 0.85s both var(--intro-etat); }
+@keyframes intro-monte { from { opacity: 0; transform: translateY(40%); } to { opacity: 1; transform: none; } }
+@keyframes intro-point {
+  0% { opacity: 0; transform: scale(0); }
+  60% { opacity: 1; transform: scale(1.4); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes intro-trait { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes intro-glisse { from { opacity: 0; transform: translateX(-0.4em); } to { opacity: 1; transform: none; } }
+@keyframes intro-rideau { to { transform: translateY(-100%); } }
+@keyframes intro-rideau-vite { to { transform: translateY(-100%); } }
 
 /* ---------- En-tête ---------- */
 .site-header {
@@ -465,8 +521,41 @@ a { color: inherit; }
   .hero-actions .btn { flex: 1 1 100%; }
 }
 </style>
+<script>
+// Écran d'intro : déroulé, passage au clic ou au clavier, et fin.
+// (La décision de le montrer est prise tout en haut de la page.)
+(function () {
+  var root = document.documentElement;
+  if (!root.classList.contains('intro')) return;
+
+  var events = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+  function go() { root.classList.add('intro-go'); }
+  function skip() { go(); root.classList.add('intro-passe'); }
+  function end() {
+    root.classList.remove('intro', 'intro-go', 'intro-passe');
+    var el = document.getElementById('intro');
+    if (el) el.remove();
+    events.forEach(function (t) { removeEventListener(t, skip, true); });
+  }
+  events.forEach(function (t) { addEventListener(t, skip, { capture: true, passive: true }); });
+  addEventListener('animationend', function (e) {
+    if (e.animationName.indexOf('intro-rideau') === 0) end();
+  });
+  // On attend la police du logo, mais jamais plus de 0,3 s
+  if (document.fonts && document.fonts.load) document.fonts.load('1em "Archivo Black"').then(go, go);
+  setTimeout(go, 300);
+  // Filet de sécurité : le site n'est jamais caché plus de 2,6 s
+  setTimeout(end, 2600);
+})();
+</script>
 </head>
 <body>
+<div class="intro-screen" id="intro" aria-hidden="true">
+  <span class="logo intro-logo">
+    <span class="logo-top"><span class="logo-word">LA TUNE</span><span class="logo-dot"></span></span>
+    <span class="logo-bottom"><span class="logo-rule"></span><span class="logo-sub">COMPANY</span></span>
+  </span>
+</div>
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="logo" href="#accueil" aria-label="La Tune Company, retour à l'accueil">
