@@ -10,16 +10,28 @@
 html.intro { background: var(--intro-bg); }
 </style>
 <script>
-// Écran d'intro : on décide tout de suite s'il faut le montrer.
-// Une fois par session, seulement si JavaScript marche
-// et si l'appareil ne demande pas de réduire les animations.
-// Pour la revoir pendant les tests : ajouter ?intro à l'adresse (ex. /?intro).
+// On décide tout de suite quelles animations jouer, avant le premier affichage.
+// Rien ne bouge si l'appareil demande de réduire les animations.
 (function () {
+  var root = document.documentElement;
+  var calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Fenêtre du haut de page : ses pièces attendent, la construction est lancée en bas de page.
+  if (!calme && 'IntersectionObserver' in window) {
+    root.classList.add('fen');
+    // Filet de sécurité : si le script de construction n'a pas démarré, la fenêtre reste complète
+    addEventListener('DOMContentLoaded', function () {
+      if (!root.classList.contains('fen-suivie')) root.classList.remove('fen');
+    });
+  }
+
+  // Écran d'intro : une fois par session.
+  // Pour le revoir pendant les tests : ajouter ?intro à l'adresse (ex. /?intro).
   try {
     if (/[?&]intro\b/.test(location.search)) sessionStorage.removeItem('intro-vue');
-    if (sessionStorage.getItem('intro-vue') || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (sessionStorage.getItem('intro-vue') || calme) return;
     sessionStorage.setItem('intro-vue', '1');
-    document.documentElement.classList.add('intro');
+    root.classList.add('intro');
   } catch (e) {}
 })();
 </script>
@@ -238,6 +250,31 @@ html.intro .intro-logo .logo-sub { animation: intro-glisse 0.25s ease-out 0.85s 
 .ph-btn { height: 30px; width: 120px; border-radius: 999px; background: var(--accent); margin-top: 6px; }
 .ph-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 8px; }
 .ph-card { aspect-ratio: 4 / 3; max-width: 100%; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); }
+
+/* Fenêtre qui se construit : « fen » (posée en haut de page) met les pièces en attente,
+   « fen-go » lance la construction. Sans JavaScript, la fenêtre reste complète. */
+html.fen { --fen-etat: paused; }
+html.fen-go { --fen-etat: running; }
+html.fen .preview-url,
+html.fen .ph-title,
+html.fen .ph-line { transform-origin: left; }
+html.fen .preview-url { animation: fen-trace 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both var(--fen-etat); }
+html.fen .preview-url span { animation: fen-fondu 0.25s ease-out 0.25s both var(--fen-etat); }
+html.fen .ph-title { animation: fen-trace 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.12s both var(--fen-etat); }
+html.fen .ph-line { animation: fen-trace 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) 0.24s both var(--fen-etat); }
+html.fen .ph-line.short { animation-delay: 0.34s; }
+html.fen .ph-btn { animation: fen-rebond 0.35s ease-out 0.44s both var(--fen-etat); }
+html.fen .ph-card { animation: fen-monte 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.56s both var(--fen-etat); }
+html.fen .ph-card:nth-child(2) { animation-delay: 0.64s; }
+html.fen .ph-card:nth-child(3) { animation-delay: 0.72s; }
+@keyframes fen-trace { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes fen-fondu { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fen-rebond {
+  0% { opacity: 0; transform: scale(0.6); }
+  70% { opacity: 1; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes fen-monte { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 .hero-points {
   display: flex; flex-wrap: wrap; gap: 10px 28px;
@@ -547,6 +584,8 @@ html.intro .intro-logo .logo-sub { animation: intro-glisse 0.25s ease-out 0.85s 
     var el = document.getElementById('intro');
     if (el) el.remove();
     events.forEach(function (t) { removeEventListener(t, skip, true); });
+    // Signal pour la suite (la fenêtre du haut de page se construit après le rideau)
+    document.dispatchEvent(new Event('intro-fin'));
   }
   events.forEach(function (t) { addEventListener(t, skip, { capture: true, passive: true }); });
   addEventListener('animationend', function (e) {
@@ -597,7 +636,7 @@ html.intro .intro-logo .logo-sub { animation: intro-glisse 0.25s ease-out 0.85s 
           </div>
         </div>
         <div class="preview" aria-hidden="true">
-          <div class="preview-bar"><span></span><span></span><span></span><div class="preview-url">votre-entreprise.com</div></div>
+          <div class="preview-bar"><span></span><span></span><span></span><div class="preview-url"><span>votre-entreprise.com</span></div></div>
           <div class="preview-body">
             <div class="ph ph-title"></div>
             <div class="ph ph-line"></div>
@@ -974,6 +1013,37 @@ html.intro .intro-logo .logo-sub { animation: intro-glisse 0.25s ease-out 0.85s 
     var el = e.target.closest('.reveal');
     if (el) show(el);
   });
+})();
+
+// Fenêtre qui se construit : après le rideau de l'intro (ou 0,2 s après l'affichage sans intro),
+// et seulement quand elle est visible à 40 % (sur téléphone, elle attend qu'on fasse défiler).
+(function () {
+  var root = document.documentElement;
+  var fen = document.querySelector('.preview');
+  if (!root.classList.contains('fen')) return;
+  if (!fen) { root.classList.remove('fen'); return; }
+  root.classList.add('fen-suivie');
+
+  var prete = false, visible = false;
+  var observer = new IntersectionObserver(function (entries) {
+    visible = entries[0].intersectionRatio >= 0.4;
+    lancer();
+  }, { threshold: [0, 0.4] });
+  function lancer() {
+    if (prete && visible) { root.classList.add('fen-go'); observer.disconnect(); }
+  }
+  function preparer() {
+    if (prete) return;
+    prete = true;
+    lancer();
+  }
+  observer.observe(fen);
+  if (root.classList.contains('intro')) {
+    document.addEventListener('intro-fin', preparer);
+    setTimeout(preparer, 2600);
+  } else {
+    setTimeout(preparer, 200);
+  }
 })();
 </script>
 </body>
