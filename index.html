@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
+/* Polices hébergées sur le site (sous-ensemble latin). Space Grotesk est une police variable : un seul fichier pour les graisses 400 à 700 */
+@font-face { font-family: "Archivo Black"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/archivo-black-latin-400.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("/fonts/space-grotesk-latin-variable.woff2") format("woff2"); }
 /* Écran d'intro : couleurs posées tout en haut, pour que le noir s'affiche dès la première image,
    avant même le chargement des polices. Elles restent noires/blanches dans les deux thèmes. */
 :root { --intro-bg: #111111; --intro-fg: #FFFFFF; }
@@ -52,9 +55,8 @@ html.intro { background: var(--intro-bg); }
 <meta property="og:image:alt" content="Logo La Tune Company sur fond noir : Création de sites web pour les entreprises">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="description" content="La Tune Company crée des sites web modernes, rapides et adaptés au téléphone pour les entreprises.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap">
+<link rel="preload" href="/fonts/archivo-black-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/space-grotesk-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* Mise en page : une seule page qui défile, chaque section est un bloc indépendant (futures pages). */
 :root {
