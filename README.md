@@ -27,4 +27,4 @@ Le formulaire utilise **Netlify Forms** (attribut `data-netlify="true"`). Les me
 
 - Logo : « LA TUNE » en Archivo Black + point orange, « COMPANY » en Space Grotesk avec un trait.
 - Couleurs : noir `#111111`, blanc `#FFFFFF`, orange `#FF6B1A`.
-- Polices : Archivo Black (titres), Space Grotesk (texte), via Google Fonts.
+- Polices : Archivo Black (titres), Space Grotesk (texte), hébergées sur le site dans `fonts/`.

@@ -6,7 +6,7 @@ Mode d'emploi du projet, lu au début de chaque séance. Site vitrine de La Tune
 
 - **Logo (variante 3A, celle qui a été choisie)** : « LA TUNE » en majuscules, en Archivo Black, suivi du point orange `#FF6B1A`. En dessous, un trait horizontal mène à « COMPANY », écrit en Space Grotesk avec des lettres espacées. Il existe deux versions : texte noir sur fond blanc, et texte blanc sur fond noir. On n'utilise pas d'autre variante.
 - **Couleurs** : noir `#111111`, blanc `#FFFFFF` et orange `#FF6B1A`. L'orange est la couleur du point du logo : on l'utilise comme accent, pas comme couleur de fond principale. Les couleurs sont définies en variables CSS dans `:root` (`--fg`, `--bg`, `--accent`…). Il faut toujours les utiliser, et ne pas écrire les codes couleur en dur.
-- **Polices** : Archivo Black pour les titres, Space Grotesk pour le texte, toutes deux chargées depuis Google Fonts.
+- **Polices** : Archivo Black pour les titres, Space Grotesk pour le texte, toutes deux hébergées sur le site, dans `fonts/`.
 - **Ton** : le site parle au nom de l'entreprise, en « nous ». Les phrases sont simples et directes, et s'adressent au visiteur en « vous ».
 - **Thème sombre** : le site suit le réglage clair ou sombre de l'appareil. Chaque changement doit être vérifié dans les deux thèmes.
 
